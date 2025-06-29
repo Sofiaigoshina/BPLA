@@ -47,7 +47,7 @@ wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/y
 ![image](https://github.com/user-attachments/assets/c4ad812c-eb3a-41a2-856a-127b1369cd07)
 
 - Пример успешной детекции человека на видео с БПЛА
-- 
+  
 ![image](https://github.com/user-attachments/assets/6c7152eb-c2c2-4c51-80a0-87ff3b89adca)
 
 - Фрагмент галереи обнаруженных объектов с информацией о трекинге
