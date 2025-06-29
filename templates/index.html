@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ видео с БПЛА</title>
+    <link rel="icon" href="/static/logo/sss.png" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>АНАЛИЗ ВИДЕО С БЕСПИЛОТНЫХ ЛЕТАТЕЛЬНЫХ АППАРАТОВ</h1>
+            <p class="subtitle">Загрузите видео и выберите объекты для поиска</p>
+        </header>
+
+        <main>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flashes">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <label for="file">Выберите видео:</label>
+                    <input type="file" name="file" id="file" accept=".mp4,.avi,.mov,.mkv" required>
+                </div>
+
+                <div class="form-group">
+    <label for="classes">Выберите объекты для поиска:</label>
+    <div class="select-wrapper">
+        <select name="classes" id="classes" multiple size="10" required>
+            <optgroup label="Транспорт">
+                <option value="bicycle">Велосипед</option>
+                <option value="car">Автомобиль</option>
+                <option value="motorbike">Мотоцикл</option>
+                <option value="aeroplane">Самолет</option>
+                <option value="bus">Автобус</option>
+                <option value="train">Поезд</option>
+                <option value="truck">Грузовик</option>
+                <option value="boat">Лодка</option>
+            </optgroup>
+
+            <optgroup label="Люди и животные">
+                <option value="person">Человек</option>
+                <option value="bird">Птица</option>
+                <option value="cat">Кошка</option>
+                <option value="dog">Собака</option>
+                <option value="horse">Лошадь</option>
+                <option value="sheep">Овца</option>
+                <option value="cow">Корова</option>
+                <option value="elephant">Слон</option>
+                <option value="bear">Медведь</option>
+                <option value="zebra">Зебра</option>
+                <option value="giraffe">Жираф</option>
+            </optgroup>
+
+            <optgroup label="Предметы">
+                <option value="backpack">Рюкзак</option>
+                <option value="handbag">Сумка</option>
+                <option value="suitcase">Чемодан</option>
+                <option value="bottle">Бутылка</option>
+                <option value="cell phone">Телефон</option>
+                <option value="laptop">Ноутбук</option>
+                <option value="book">Книга</option>
+            </optgroup>
+
+            <optgroup label="Еда">
+                <option value="banana">Банан</option>
+                <option value="apple">Яблоко</option>
+                <option value="sandwich">Сэндвич</option>
+                <option value="orange">Апельсин</option>
+                <option value="pizza">Пицца</option>
+                <option value="cake">Торт</option>
+            </optgroup>
+
+            <optgroup label="Мебель">
+                <option value="chair">Стул</option>
+                <option value="sofa">Диван</option>
+                <option value="bed">Кровать</option>
+                <option value="diningtable">Стол</option>
+            </optgroup>
+        </select>
+    </div>
+    <div class="hint">Для выбора нескольких объектов удерживайте Ctrl (Windows) или Command (Mac)</div>
+</div>
+
+                <button type="submit" class="submit-btn">
+                    <span class="btn-text">Обработать видео</span>
+                    <span class="btn-icon">→</span>
+                </button>
+            </form>
+
+            {% if frames %}
+<section class="results-section">
+    <h2>Результаты обнаружения</h2>
+
+    <div class="download-buttons">
+        <a href="{{ url_for('serve_processed', filename=processed_video) }}" download class="download-btn">
+            Скачать обработанное видео
+        </a>
+    </div>
+
+    <div class="detected-objects">
+        <h3>Обнаруженные объекты</h3>
+        <div class="objects-grid">
+            {% for obj in frames %}
+            <div class="object-card">
+                <h4 class="object-title">{{ obj['class']|capitalize }} (ID: {{ loop.index }})</h4>
+                <div class="object-examples">
+                    <div class="example">
+                        <p class="time">Время появления: {{ obj['start'] }}</p>
+                        <p class="time">Время исчезновения: {{ obj['end'] }}</p>
+                        <img src="{{ url_for('static', filename='frames/' + obj['image']) }}"
+                             alt="{{ obj['class'] }}" class="object-image">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+        </main>
+
+        <footer>
+            <p class="copyright">© 2025 Анализ видео с БПЛА</p>
+        </footer>
+    </div>
+</body>
+</html>
+
